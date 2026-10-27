@@ -1,0 +1,33 @@
+[project]
+name = "vllm-cohere-tool-call-ids"
+version = "0.1.0"
+description = "Reproduction: vLLM's Cohere Command parser returns the model's per-turn tool_call_id as the OpenAI tool call id"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "vllm==0.32.0",
+    "cohere-melody==0.15.3",
+    "pytest>=8",
+    "torch",
+    "torchaudio",
+    "torchcodec",
+    "torchvision",
+]
+
+[tool.uv]
+package = false
+environments = ["sys_platform == 'linux'"]
+
+# The parser needs no GPU; the CPU build of torch avoids the CUDA wheels.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchaudio = { index = "pytorch-cpu" }
+torchcodec = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+
+[tool.pytest.ini_options]
+addopts = "-v -rA"
